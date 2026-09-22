@@ -1,0 +1,20 @@
+{
+  "project": "二经知识库",
+  "version": "0.1.0",
+  "schemas": {
+    "ods2": "ODS",
+    "dw2": "DWD/DWS",
+    "dim2": "维度",
+    "report2": "ADS 报表",
+    "tmp2": "临时表"
+  },
+  "scan": {
+    "ddl_dir": "scan/_sources/ddl",
+    "proc_dir": "scan/_sources/procs",
+    "kb_dir": "kb"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8890
+  }
+}

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>二经知识库</title>
+<style>
+:root {
+  --bg: #f1f5f9;
+  --panel: #ffffff;
+  --panel-2: #f8fafc;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --text: #0f172a;
+  --text-2: #334155;
+  --muted: #64748b;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-soft: #eef2ff;
+  --warn: #b45309;
+  --warn-soft: #fef3c7;
+  --danger: #b91c1c;
+  --ok: #15803d;
+  --ok-soft: #dcfce7;
+  --shadow-sm: 0 1px 2px rgba(15,23,42,.05);
+  --shadow-md: 0 4px 12px rgba(15,23,42,.08);
+  --shadow-lg: 0 12px 32px rgba(15,23,42,.12);
+}
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --panel-2: #0f172a;
+  --border: #334155;
+  --border-strong: #475569;
+  --text: #f1f5f9;
+  --text-2: #cbd5e1;
+  --muted: #94a3b8;
+  --primary: #818cf8;
+  --primary-hover: #a5b4fc;
+  --primary-soft: #312e81;
+  --warn: #fbbf24;
+  --warn-soft: #422006;
+  --danger: #f87171;
+  --ok: #4ade80;
+  --ok-soft: #052e16;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.4);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,.5);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px; line-height: 1.6;
+}
+
+/* ===== 顶栏 ===== */
+header {
+  background: linear-gradient(90deg, #0f172a 0%, #1e1b4b 100%);
+  padding: 0 24px; height: 56px;
+  display: flex; align-items: center; gap: 28px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: var(--shadow-md);
+}
+header .logo {
+  color: #fff; font-weight: 700; font-size: 16px;
+  display: flex; align-items: center; gap: 8px;
+  letter-spacing: .5px;
+}
+header .logo .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  box-shadow: 0 0 12px rgba(129,140,248,.6);
+}
+nav { display: flex; gap: 4px; flex: 1; }
+nav a {
+  color: #94a3b8; text-decoration: none;
+  padding: 6px 14px; border-radius: 6px;
+  font-size: 13.5px; font-weight: 500;
+  transition: all .15s;
+}
+nav a:hover { color: #e2e8f0; background: rgba(255,255,255,.06); }
+nav a.active { color: #fff; background: rgba(99,102,241,.25); }
+.theme-toggle {
+  background: rgba(255,255,255,.08); color: #e2e8f0;
+  border: 1px solid rgba(255,255,255,.1);
+  padding: 6px 12px; border-radius: 6px; cursor: pointer;
+  font-size: 14px;
+}
+.theme-toggle:hover { background: rgba(255,255,255,.15); }
+
+main { max-width: 1240px; margin: 24px auto; padding: 0 24px; }
+
+/* ===== 工作台卡片 ===== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px; margin-bottom: 28px;
+}
+.card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  transition: all .2s;
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--primary); opacity: 0;
+  transition: opacity .2s;
+}
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.card:hover::before { opacity: 1; }
+.card .num {
+  font-size: 30px; font-weight: 700; color: var(--text);
+  font-variant-numeric: tabular-nums; line-height: 1.1;
+}
+.card .label { color: var(--muted); font-size: 12.5px; margin-top: 6px; }
+.card .icon {
+  position: absolute; right: 16px; top: 16px;
+  font-size: 22px; opacity: .25;
+}
+
+/* ===== 通用面板 ===== */
+.panel {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; box-shadow: var(--shadow-sm);
+}
+.panel h3 { margin-top: 0; }
+h2 {
+  font-size: 20px; font-weight: 700; margin: 0 0 18px;
+  color: var(--text);
+}
+h3 { font-size: 15px; font-weight: 600; }
+
+/* ===== 工具栏 ===== */
+.toolbar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+input, select, textarea {
+  font: inherit; padding: 8px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px; background: var(--panel); color: var(--text);
+  transition: border-color .15s, box-shadow .15s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79,70,229,.15);
+}
+input[type=text] { min-width: 260px; }
+button {
+  font: inherit; padding: 8px 16px; border-radius: 8px;
+  border: none; cursor: pointer; font-weight: 500;
+  background: var(--primary); color: #fff;
+  transition: all .15s;
+}
+button:hover { background: var(--primary-hover); transform: translateY(-1px); }
+button.secondary {
+  background: var(--panel); color: var(--text-2);
+  border: 1px solid var(--border-strong);
+}
+button.secondary:hover { background: var(--panel-2); }
+
+/* ===== 表格 ===== */
+table {
+  width: 100%; border-collapse: collapse;
+  background: var(--panel); border-radius: 10px; overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+th {
+  background: var(--panel-2); font-weight: 600;
+  font-size: 12.5px; text-transform: uppercase; letter-spacing: .4px;
+  color: var(--muted);
+}
+tr:last-child td { border-bottom: none; }
+tbody tr { transition: background .1s; }
+tbody tr:hover { background: var(--primary-soft); }
+code {
+  background: var(--primary-soft); color: var(--primary);
+  padding: 2px 6px; border-radius: 4px;
+  font-family: "JetBrains Mono", Consolas, monospace; font-size: 12px;
+}
+
+/* ===== schema 徽章 ===== */
+.badge {
+  display: inline-block; padding: 2px 9px; border-radius: 12px;
+  font-size: 11px; font-weight: 600; letter-spacing: .3px;
+}
+.badge.ods   { background: #e2e8f0; color: #475569; }
+.badge.dwd   { background: #dbeafe; color: #1e40af; }
+.badge.dim   { background: #f3e8ff; color: #6b21a8; }
+.badge.ads   { background: #ffedd5; color: #9a3412; }
+.badge.tmp   { background: #f1f5f9; color: #94a3b8; }
+[data-theme="dark"] .badge.ods   { background: #1e293b; color: #94a3b8; }
+[data-theme="dark"] .badge.dwd   { background: #1e3a8a; color: #93c5fd; }
+[data-theme="dark"] .badge.dim   { background: #3b0764; color: #d8b4fe; }
+[data-theme="dark"] .badge.ads   { background: #431407; color: #fdba74; }
+[data-theme="dark"] .badge.tmp   { background: #1e293b; color: #64748b; }
+
+/* ===== 抽屉 ===== */
+.drawer-bg {
+  position: fixed; inset: 0; background: rgba(15,23,42,.5);
+  display: none; z-index: 200; backdrop-filter: blur(2px);
+}
+.drawer-bg.open { display: block; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 760px; max-width: 96vw;
+  background: var(--panel); z-index: 201;
+  padding: 24px; overflow-y: auto;
+  box-shadow: -8px 0 32px rgba(0,0,0,.2);
+  display: none; animation: slideIn .2s ease;
+}
+@keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.drawer.open { display: block; }
+.drawer table { box-shadow: none; }
+
+/* ===== SQL 输入 ===== */
+textarea.sql {
+  width: 100%; min-height: 280px;
+  font-family: "JetBrains Mono", Consolas, monospace; font-size: 12.5px;
+  line-height: 1.6; padding: 14px; resize: vertical;
+}
+
+/* ===== 杂项 ===== */
+.muted { color: var(--muted); }
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--text); color: var(--bg);
+  padding: 12px 20px; border-radius: 8px; z-index: 300;
+  display: none; box-shadow: var(--shadow-lg);
+  font-weight: 500;
+}
+.empty {
+  text-align: center; padding: 48px 20px; color: var(--muted);
+}
+.empty .big { font-size: 40px; opacity: .4; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><span class="dot"></span>二经知识库</div>
+  <nav>
+    <a href="#/stats" data-route="stats">工作台</a>
+    <a href="#/tables" data-route="tables">表字典</a>
+    <a href="#/procs" data-route="procs">存储过程</a>
+    <a href="#/kb" data-route="kb">知识库</a>
+    <a href="#/import" data-route="import">导入</a>
+  </nav>
+  <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
+</header>
+<main id="main"></main>
+<div class="drawer-bg" id="drawer-bg"></div>
+<div class="drawer" id="drawer"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const api = (p) => fetch(p).then(r => r.json());
+const esc = s => (s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// 主题
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', cur);
+  localStorage.setItem('erjing-theme', cur);
+  document.querySelector('.theme-toggle').textContent = cur === 'dark' ? '☀️' : '🌙';
+}
+(function initTheme(){
+  const saved = localStorage.getItem('erjing-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.querySelector('.theme-toggle').textContent = saved === 'dark' ? '☀️' : '🌙';
+  }
+})();
+
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2200);
+}
+function openDrawer(html) { $('#drawer').innerHTML = html; $('#drawer').classList.add('open'); $('#drawer-bg').classList.add('open'); }
+function closeDrawer() { $('#drawer').classList.remove('open'); $('#drawer-bg').classList.remove('open'); }
+$('#drawer-bg').onclick = closeDrawer;
+
+function schemaBadge(sch) {
+  const map = {ods2:'ods', dw2:'dwd', dim2:'dim', report2:'ads', tmp2:'tmp'};
+  const cls = map[sch] || 'ods';
+  return `<span class="badge ${cls}">${esc(sch)}</span>`;
+}
+
+// ===== 视图：工作台 =====
+async function viewStats() {
+  const s = await api('/api/stats');
+  const cards = [
+    {n: s.tables, l: '已收录表', i: '🗄'},
+    {n: s.fields, l: '字段总数', i: '📋'},
+    {n: s.field_comments, l: '已补注释', i: '💬'},
+    {n: s.procs, l: '存储过程', i: '⚙️'},
+    {n: s.lineage_edges, l: '血缘边', i: '🔗'},
+  ];
+  $('#main').innerHTML = `
+    <h2>工作台</h2>
+    <div class="cards">
+      ${cards.map(c => `
+        <div class="card">
+          <span class="icon">${c.i}</span>
+          <div class="num">${c.n}</div>
+          <div class="label">${c.l}</div>
+        </div>`).join('')}
+    </div>
+    <div class="panel">
+      <h3>快速开始</h3>
+      <ol>
+        <li>从「导入」页粘贴一张表的 <code>CREATE TABLE</code>，自动入库；</li>
+        <li>在「表字典」搜索表名，点详情补字段中文注释；</li>
+        <li>过程和 SQL 后续逐步录入，血缘会自动从过程里抽。</li>
+      </ol>
+      <p class="muted">当前是骨架版本，数据靠手工逐步梳理导入。右上角 🌙 可切换暗色模式。</p>
+    </div>`;
+}
+
+// ===== 视图：表字典 =====
+async function viewTables(q='', sch='') {
+  const data = await api(`/api/tables?q=${encodeURIComponent(q)}&schema=${encodeURIComponent(sch)}`);
+  const rows = data.items.map(t => `
+    <tr>
+      <td>${schemaBadge(t.schema)} <a href="#" onclick="showTable('${t.fullname}');return false">${esc(t.fullname)}</a></td>
+      <td class="muted">${esc(t.comment)}</td>
+      <td style="text-align:right">${t.fields}</td>
+      <td><code>${esc((t.distributed_by||[]).join(', '))}</code></td>
+    </tr>`).join('');
+  $('#main').innerHTML = `
+    <h2>表字典</h2>
+    <div class="toolbar">
+      <input type="text" id="q" placeholder="搜索表名 / 表注释..." value="${esc(q)}">
+      <select id="sch">
+        <option value="">全部 schema</option>
+        <option value="ods2" ${sch==='ods2'?'selected':''}>ods2</option>
+        <option value="dw2" ${sch==='dw2'?'selected':''}>dw2</option>
+        <option value="dim2" ${sch==='dim2'?'selected':''}>dim2</option>
+        <option value="report2" ${sch==='report2'?'selected':''}>report2</option>
+        <option value="tmp2" ${sch==='tmp2'?'selected':''}>tmp2</option>
+      </select>
+      <button onclick="doSearch()">搜索</button>
+    </div>
+    <table><thead><tr><th>表名</th><th>注释</th><th style="text-align:right">字段数</th><th>分布键</th></tr></thead>
+    <tbody>${rows || '<tr><td colspan=4><div class="empty"><div class="big">📭</div>暂无数据，去「导入」页粘一张表的 DDL</div></td></tr>'}</tbody></table>`;
+  $('#q').onkeydown = e => e.key === 'Enter' && doSearch();
+}
+function doSearch() { location.hash = `#/tables?q=${encodeURIComponent($('#q').value)}&s=${$('#sch').value}`; }
+
+async function showTable(fullname) {
+  const t = await api('/api/table?name=' + encodeURIComponent(fullname));
+  if (t.error) return toast(t.error);
+  const rows = t.fields.map(f => {
+    const cmt = (t.column_comments||{})[f.name] || '';
+    return `<tr>
+      <td><code>${esc(f.name)}</code></td>
+      <td class="muted">${esc(f.type)}</td>
+      <td>${cmt ? esc(cmt) : `<span style="cursor:pointer;color:var(--primary)" onclick="addComment('${t.fullname}','${f.name}')">+ 补注释</span>`}</td>
+    </tr>`;
+  }).join('');
+  openDrawer(`
+    <h3 style="margin-top:0">${esc(t.fullname)} <span class="muted" style="font-weight:400;font-size:13px">${esc(t.comment||'无表注释')}</span></h3>
+    <p class="muted" style="font-size:12px">分布键: <code>${esc((t.distributed_by||[]).join(', '))}</code> · 更新于 ${esc(t.updated_at||'')}</p>
+    <table><thead><tr><th>字段</th><th>类型</th><th>中文注释</th></tr></thead><tbody>${rows}</tbody></table>
+  `);
+}
+function addComment(tbl, col) {
+  const c = prompt(`给 ${tbl}.${col} 补中文注释：`);
+  if (c === null) return;
+  fetch('/api/comment', {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({table: tbl, column: col, comment: c})})
+    .then(r => r.json()).then(r => { if (r.ok) { toast('已保存'); showTable(tbl); } });
+}
+
+// ===== 视图：过程 =====
+async function viewProcs(q='') {
+  const data = await api(`/api/procs?q=${encodeURIComponent(q)}`);
+  const rows = data.items.map(p => `<tr><td><code>${esc(p.name)}</code></td><td class="muted">${esc(p.desc||'')}</td></tr>`).join('');
+  $('#main').innerHTML = `
+    <h2>存储过程</h2>
+    <div class="empty" style="padding:32px"><div class="big">⚙️</div>过程文件后续逐步录入到 scan/_sources/procs/，再跑 parse_proc.py 入库。</div>
+    <table><thead><tr><th>过程名</th><th>说明</th></tr></thead><tbody>${rows || ''}</tbody></table>`;
+}
+
+// ===== 视图：知识库 =====
+async function viewKb() {
+  const data = await api('/api/kb');
+  const items = data.items.map(x => `<li><code>${esc(x.path)}</code></li>`).join('');
+  $('#main').innerHTML = `
+    <h2>知识库</h2>
+    <p class="muted">kb/ 目录下的 md 文件（口径、红线、模板、环境资料）。后续做 md 渲染。</p>
+    <div class="panel"><ul style="margin:0">${items || '<li class="muted">暂无条目</li>'}</ul></div>`;
+}
+
+// ===== 视图：导入 =====
+function viewImport() {
+  $('#main').innerHTML = `
+    <h2>导入 DDL</h2>
+    <p class="muted">从 pgAdmin / 建表脚本里复制 CREATE TABLE 语句，粘贴到下面。支持一次粘多张表。</p>
+    <div class="panel">
+      <textarea class="sql" id="ddl" placeholder="CREATE TABLE dw2.xxx (...) WITH (...) DISTRIBUTED BY (...);&#10;COMMENT ON TABLE ... IS '...';"></textarea>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button onclick="doImport()">导入</button>
+        <button class="secondary" onclick="document.getElementById('ddl').value=''">清空</button>
+      </div>
+      <div id="import-result"></div>
+    </div>`;
+}
+async function doImport() {
+  const sql = $('#ddl').value;
+  const r = await fetch('/api/import-ddl', {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({sql})}).then(r => r.json());
+  if (r.ok) {
+    $('#import-result').innerHTML = `<p style="color:var(--ok);margin-top:12px">✓ 成功：新增 ${r.added} 张，更新 ${r.updated} 张，当前共 ${r.total} 张。</p>`;
+  } else {
+    $('#import-result').innerHTML = `<p style="color:var(--danger);margin-top:12px">✗ 失败：${esc(r.error||'未知错误')}</p>`;
+  }
+}
+
+// ===== 路由 =====
+function router() {
+  const hash = location.hash || '#/stats';
+  const [path, query] = hash.slice(1).split('?');
+  const params = new URLSearchParams(query || '');
+  document.querySelectorAll('nav a').forEach(a => a.classList.toggle('active', a.dataset.route === path.slice(1)));
+  closeDrawer();
+  if (path === '/stats') viewStats();
+  else if (path === '/tables') viewTables(params.get('q')||'', params.get('s')||'');
+  else if (path === '/procs') viewProcs(params.get('q')||'');
+  else if (path === '/kb') viewKb();
+  else if (path === '/import') viewImport();
+  else viewStats();
+}
+window.addEventListener('hashchange', router);
+window.addEventListener('DOMContentLoaded', router);
+</script>
+</body>
+</html>
